@@ -1,4 +1,4 @@
-# cats-project
+# Gender-Api
 
 ## Project setup
 ```
