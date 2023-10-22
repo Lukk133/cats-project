@@ -1,21 +1,20 @@
 <template >
   <div class="container">
-    <div v-for="post in posts" :key="post.id">
-      <div class="d-flex container">
-        <input v-model="task" type="text" class="form-control" placeholder="Input a name">
-        <button class="btn btn-primary" @click="submitTask">Wyszukaj</button>
+    <div class="d-flex container">
+      <input v-model="task" type="text" class="form-control" placeholder="Input a name">
+      <button class="btn btn-primary" @click="search">Wyszukaj</button>
+    </div>
+
+    <div :hidden="hideData">
+      <div v-for="post in posts" :key="post.id">
+        <div>Name: {{ post.name }}</div>
+        <div>Count: {{ post.count }}</div>
+        <div>Gender: {{ post.gender }}</div>
+        <div>Probability of the gender: {{ post.probability }}</div>
       </div>
-   
-<div :hidden="hideData">
-  <div>Name: {{ post.name }}</div>
-      <div>Count: {{ post.count }}</div>
-      <div>Gender: {{ post.gender }}</div>
-      <div>Probability of the gender: {{ post.probability }}</div>
     </div>
   </div>
-</div>
-    
-
+  
 </template>
 <script>
 import axios from 'axios'
@@ -46,7 +45,7 @@ export default {
       })
   },
   methods: {
-    submitTask() {
+    search() {
       if (this.task.length === 0) return;
 
       if (this.task.length === 50) { alert('Maksymalna liczba znaków to 50') };
@@ -62,7 +61,7 @@ export default {
           this.posts = response
         })
       this.task = '',
-      this.hideData = false
+        this.hideData = false
     }
   },
 }
