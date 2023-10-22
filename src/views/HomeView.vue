@@ -1,18 +1,72 @@
-<template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+<template >
+  <div class="container">
+    <div v-for="post in posts" :key="post.id">
+      <div class="d-flex container">
+        <input v-model="task" type="text" class="form-control" placeholder="Input a name">
+        <button class="btn btn-primary" @click="submitTask">Wyszukaj</button>
+      </div>
+   
+<div :hidden="hideData">
+  <div>Name: {{ post.name }}</div>
+      <div>Count: {{ post.count }}</div>
+      <div>Gender: {{ post.gender }}</div>
+      <div>Probability of the gender: {{ post.probability }}</div>
+    </div>
   </div>
-</template>
+</div>
+    
 
+</template>
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import axios from 'axios'
+
 
 export default {
   name: 'HomeView',
   components: {
-    HelloWorld
-  }
+  },
+  data() {
+    return {
+      hideData: true,
+      posts: [],
+      task: '',
+      tasks: [
+        {
+          name: 'Peter'
+        }],
+    }
+  },
+  created() {
+    /*można też mounted*/
+    axios
+      .get(`https://api.genderize.io?name=`)
+      .then((response) => {
+        console.log(response.data);
+        this.posts = response
+      })
+  },
+  methods: {
+    submitTask() {
+      if (this.task.length === 0) return;
+
+      if (this.task.length === 50) { alert('Maksymalna liczba znaków to 50') };
+
+      this.tasks.push({
+        name: this.task,
+      })
+      let name = this.task
+      axios
+        .get(`https://api.genderize.io?name=${name}`)
+        .then((response) => {
+          console.log(response.data);
+          this.posts = response
+        })
+      this.task = '',
+      this.hideData = false
+    }
+  },
 }
+
+
+
 </script>
