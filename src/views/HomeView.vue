@@ -5,7 +5,7 @@
       <button class="btn btn-primary" @click="search">Wyszukaj</button>
     </div>
 
-    <div :hidden="hideData">
+    <div v-if="posts.length > 0">
       <div v-for="post in posts" :key="post.id">
         <div>Name: {{ post.name }}</div>
         <div>Count: {{ post.count }}</div>
@@ -36,19 +36,19 @@ export default {
     }
   },
   created() {
-    /*można też mounted*/
-    axios
-      .get(`https://api.genderize.io?name=`)
-      .then((response) => {
-        console.log(response.data);
-        this.posts = response
-      })
+    this.init()
+    this.search()
   },
   methods: {
+    init(){
+      this.posts = []
+      let name = this.$route.query.name ?? ''
+      this.task = name
+    },
     search() {
       if (this.task.length === 0) return;
 
-      if (this.task.length === 50) { alert('Maksymalna liczba znaków to 50') };
+      if (this.task.length >= 50) { alert('Maksymalna liczba znaków to 50') };
 
       this.tasks.push({
         name: this.task,
@@ -58,10 +58,9 @@ export default {
         .get(`https://api.genderize.io?name=${name}`)
         .then((response) => {
           console.log(response.data);
-          this.posts = response
+          this.posts.push(response.data)
         })
-      this.task = '',
-        this.hideData = false
+      this.task = ''
     }
   },
 }
